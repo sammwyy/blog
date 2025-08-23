@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sammwy's Blog</title>
+    <!-- Tailwind via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              bg: "#0b0b0c",
+              fg: "#f8f8f8",
+              accent: {
+                50: "#fff0f6",
+                100: "#ffe3f0",
+                200: "#ffcfe3",
+                300: "#ffb4d2",
+                400: "#ff97c0",
+                500: "#ff7cac", // soft pastel pink
+                600: "#db5e91",
+                700: "#b84a79",
+                800: "#943a62",
+                900: "#6f2a49",
+              },
+            },
+            fontFamily: {
+              display: ['"Nunito"', "ui-sans-serif", "system-ui"],
+              body: ['"Inter"', "ui-sans-serif", "system-ui"],
+            },
+            boxShadow: {
+              soft: "0 10px 30px rgba(255, 124, 172, 0.15)",
+            },
+          },
+        },
+      };
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Nunito:wght@700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      html,
+      body {
+        background: #0b0b0c;
+      }
+      /* Cute circle cursor */
+      body {
+        cursor: none;
+      }
+      .cursor-ring,
+      .cursor-dot {
+        position: fixed;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+      }
+      .cursor-ring {
+        width: 22px;
+        height: 22px;
+        border-radius: 9999px;
+        border: 1px solid #ff7cac;
+        mix-blend-mode: screen;
+        transition: width 0.15s ease, height 0.15s ease, border-color 0.2s ease,
+          opacity 0.2s ease;
+      }
+      .cursor-dot {
+        width: 4px;
+        height: 4px;
+        border-radius: 9999px;
+        background: #ff7cac;
+        box-shadow: 0 0 8px rgba(255, 124, 172, 0.6);
+      }
+      .cursor-hide {
+        opacity: 0;
+      }
+      .cute-outline {
+        outline: 1px dashed rgba(255, 255, 255, 0.15);
+        outline-offset: 3px;
+      }
+      /* Scrolling header animation */
+      @keyframes scroll-left {
+        0% {
+          transform: translateX(60%);
+        }
+        100% {
+          transform: translateX(-60%);
+        }
+      }
+      .scroll-text {
+        animation: scroll-left 12s linear infinite;
+        white-space: nowrap;
+      }
+      .scroll-container {
+        overflow: hidden;
+        position: relative;
+        mask: linear-gradient(
+          90deg,
+          transparent,
+          black 10%,
+          black 90%,
+          transparent
+        );
+      }
+
+      /* Markdown content */
+      .prose-invert {
+        line-height: 1.7;
+        font-size: 16px;
+      }
+
+      /* Headings */
+      .prose-invert h1 {
+        font-family: "Nunito", ui-sans-serif, system-ui;
+        font-size: 2.25rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin: 2rem 0 1rem 0;
+        color: #f8f8f8;
+        letter-spacing: -0.025em;
+      }
+
+      .prose-invert h2 {
+        font-family: "Nunito", ui-sans-serif, system-ui;
+        font-size: 1.875rem;
+        font-weight: 700;
+        line-height: 1.3;
+        margin: 1.75rem 0 0.75rem 0;
+        color: #f8f8f8;
+        letter-spacing: -0.025em;
+        padding-bottom: 0.5rem;
+      }
+
+      .prose-invert h3 {
+        font-family: "Nunito", ui-sans-serif, system-ui;
+        font-size: 1.5rem;
+        font-weight: 600;
+        line-height: 1.4;
+        margin: 1.5rem 0 0.5rem 0;
+        color: #ff7cac;
+      }
+
+      .prose-invert h4 {
+        font-family: "Nunito", ui-sans-serif, system-ui;
+        font-size: 1.25rem;
+        font-weight: 600;
+        line-height: 1.4;
+        margin: 1.25rem 0 0.5rem 0;
+        color: #ff7cac;
+      }
+
+      .prose-invert h5,
+      .prose-invert h6 {
+        font-family: "Nunito", ui-sans-serif, system-ui;
+        font-size: 1.125rem;
+        font-weight: 600;
+        line-height: 1.4;
+        margin: 1rem 0 0.5rem 0;
+        color: #ff97c0;
+      }
+
+      /* Paragraphs */
+      .prose-invert p {
+        margin: 1rem 0;
+        color: rgba(248, 248, 248, 0.9);
+      }
+
+      /* Links */
+      .prose-invert a {
+        color: #ff7cac;
+        text-decoration: underline;
+        text-decoration-style: dotted;
+        text-underline-offset: 3px;
+        transition: all 0.2s ease;
+      }
+
+      .prose-invert a:hover {
+        color: #ff97c0;
+        text-decoration-style: solid;
+      }
+
+      /* Lists */
+      .prose-invert ul,
+      .prose-invert ol {
+        margin: 1.25rem 0;
+        padding-left: 1.5rem;
+      }
+
+      .prose-invert ul {
+        list-style: none;
+      }
+
+      .prose-invert ul > li {
+        position: relative;
+        margin: 0.5rem 0;
+        padding-left: 1rem;
+      }
+
+      .prose-invert ul > li::before {
+        content: "•";
+        color: #ff7cac;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+
+      .prose-invert ol {
+        list-style: none;
+        counter-reset: list-counter;
+      }
+
+      .prose-invert ol > li {
+        position: relative;
+        margin: 0.5rem 0;
+        padding-left: 2rem;
+        counter-increment: list-counter;
+      }
+
+      .prose-invert ol > li::before {
+        content: counter(list-counter) ".";
+        color: #ff7cac;
+        font-weight: 600;
+        position: absolute;
+        left: 0;
+        top: 0;
+        min-width: 1.5rem;
+      }
+
+      /* Nested lists */
+      .prose-invert li ul,
+      .prose-invert li ol {
+        margin: 0.5rem 0;
+      }
+
+      /* Blockquotes */
+      .prose-invert blockquote {
+        margin: 1.5rem 0;
+        padding: 1rem 1.5rem;
+        border-left: 4px solid #ff7cac;
+        background: rgba(255, 124, 172, 0.1);
+        border-radius: 0 0.5rem 0.5rem 0;
+        font-style: italic;
+        color: rgba(248, 248, 248, 0.95);
+      }
+
+      .prose-invert blockquote p:first-child {
+        margin-top: 0;
+      }
+
+      .prose-invert blockquote p:last-child {
+        margin-bottom: 0;
+      }
+
+      /* Code blocks */
+      .prose-invert pre {
+        margin: 1.5rem 0;
+        padding: 1.5rem;
+        background: #1a1a1b !important;
+        border: 1px solid rgba(255, 124, 172, 0.2);
+        border-radius: 1rem;
+        overflow-x: auto;
+        font-size: 14px;
+        line-height: 1.6;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      }
+
+      .prose-invert pre code {
+        background: none !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+        font-size: inherit;
+        color: inherit;
+      }
+
+      /* Inline code */
+      .prose-invert code:not(pre code) {
+        background: rgba(255, 124, 172, 0.15);
+        color: #ff97c0;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.375rem;
+        font-size: 0.875em;
+        font-weight: 500;
+        border: 1px solid rgba(255, 124, 172, 0.3);
+      }
+
+      /* Images */
+      .prose-invert img {
+        border-radius: 1rem;
+        margin: 2rem auto;
+        max-width: 100%;
+        height: auto;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      /* Tables */
+      .prose-invert table {
+        width: 100%;
+        margin: 2rem 0;
+        border-collapse: collapse;
+        border-radius: 0.75rem;
+        overflow: hidden;
+        border: 1px solid rgba(255, 124, 172, 0.3);
+        background: rgba(255, 124, 172, 0.05);
+      }
+
+      .prose-invert th {
+        background: rgba(255, 124, 172, 0.2);
+        color: #f8f8f8;
+        font-weight: 600;
+        padding: 0.75rem 1rem;
+        text-align: left;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .prose-invert td {
+        padding: 0.75rem 1rem;
+        border-top: 1px solid rgba(255, 124, 172, 0.2);
+        color: rgba(248, 248, 248, 0.9);
+      }
+
+      .prose-invert tr:hover {
+        background: rgba(255, 124, 172, 0.1);
+      }
+
+      /* Horizontal rules */
+      .prose-invert hr {
+        margin: 2.5rem 0;
+        border: none;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #ff7cac, transparent);
+        border-radius: 1px;
+      }
+
+      /* Strong and emphasis */
+      .prose-invert strong {
+        color: #f8f8f8;
+        font-weight: 700;
+      }
+
+      .prose-invert em {
+        color: #ff97c0;
+        font-style: italic;
+      }
+
+      /* Custom syntax highlighting overrides */
+      .prose-invert .token.comment,
+      .prose-invert .token.prolog,
+      .prose-invert .token.doctype,
+      .prose-invert .token.cdata {
+        color: #666;
+      }
+
+      .prose-invert .token.punctuation {
+        color: #f8f8f8;
+      }
+
+      .prose-invert .token.property,
+      .prose-invert .token.tag,
+      .prose-invert .token.boolean,
+      .prose-invert .token.number,
+      .prose-invert .token.constant,
+      .prose-invert .token.symbol,
+      .prose-invert .token.deleted {
+        color: #ff7cac;
+      }
+
+      .prose-invert .token.selector,
+      .prose-invert .token.attr-name,
+      .prose-invert .token.string,
+      .prose-invert .token.char,
+      .prose-invert .token.builtin,
+      .prose-invert .token.inserted {
+        color: #7dd3fc;
+      }
+
+      .prose-invert .token.operator,
+      .prose-invert .token.entity,
+      .prose-invert .token.url,
+      .prose-invert .language-css .token.string,
+      .prose-invert .style .token.string {
+        color: #fbbf24;
+      }
+
+      .prose-invert .token.atrule,
+      .prose-invert .token.attr-value,
+      .prose-invert .token.keyword {
+        color: #a78bfa;
+      }
+
+      .prose-invert .token.function,
+      .prose-invert .token.class-name {
+        color: #34d399;
+      }
+    </style>
+  </head>
+  <body class="text-fg font-body selection:bg-accent-500/30 selection:text-fg">
+    <!-- Custom Cursor Elements -->
+    <div id="cursor-ring" class="cursor-ring"></div>
+    <div id="cursor-dot" class="cursor-dot"></div>
+
+    <div id="root"></div>
+
+    <!-- React + ReactDOM + Babel -->
+    <script
+      src="https://unpkg.com/react@18/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Markdown parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Syntax highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
+    />
+
+    <script type="text/babel">
+      const { useEffect, useMemo, useState } = React;
+      const contentCache = {};
+
+      // Scrolling header messages
+      function shuffleArray(array) {
+        return array
+          .map((value) => ({ value, sort: Math.random() }))
+          .sort((a, b) => a.sort - b.sort)
+          .map(({ value }) => value);
+      }
+
+      const HEADER_MESSAGES = shuffleArray([
+        {
+          en: "BREAKING: Developer spends 5 hours debugging only to find a missing semicolon;",
+          es: "ÚLTIMA HORA: Un dev pasa 5 horas debuggeando solo para encontrar un punto y coma perdido;",
+        },
+        {
+          en: "URGENT: Man loses will to live after Git merge conflict in production.",
+          es: "URGENTE: Un dev pierde las ganas de vivir tras un merge conflict en producción.",
+        },
+        {
+          en: "ALERT: Talking to rubber ducks improves code quality by 73%.",
+          es: "ALERTA: Hablar con un rubber duck mejora la calidad del código en un 73%.",
+        },
+        {
+          en: "NEWS FLASH: JavaScript dev finally understands 'this', immediately forgets.",
+          es: "NOTICIA: Un dev de JavaScript finalmente entiende 'this'… y lo olvida al instante.",
+        },
+        {
+          en: "JUST IN: CSS specificity wars leave thousands of divs unstyled.",
+          es: "ÚLTIMO MOMENTO: Las guerras de specificity en CSS dejan miles de divs sin estilo.",
+        },
+        {
+          en: "TRENDING: Local programmer's 'temporary fix' enters 7th year in production.",
+          es: "TENDENCIA: Un 'fix temporal' de un dev entra en su séptimo año en producción.",
+        },
+        {
+          en: "UPDATE: Stack Overflow goes down for 10 minutes, global productivity collapses.",
+          es: "ACTUALIZACIÓN: Stack Overflow cae por 10 minutos y la productividad global colapsa.",
+        },
+        {
+          en: "REPORT: Dev calls a bug 'impossible' moments before finding own typo.",
+          es: "REPORTE: Un dev llama un bug 'imposible' segundos antes de encontrar su propio typo.",
+        },
+        {
+          en: "EXCLUSIVE: 'It works on my machine' now valid in coding courts.",
+          es: "EXCLUSIVA: 'Funciona en mi máquina' ahora aceptado en las cortes de programación.",
+        },
+        {
+          en: "ALERT: Coffee intake directly correlated to lines of code written.",
+          es: "ALERTA: La cantidad de café está directamente relacionada con las líneas de código escritas.",
+        },
+        {
+          en: "SHOCKING: Perfect code on first try, suspects black magic.",
+          es: "IMPACTANTE: Código perfecto al primer intento… sospecha de magia negra.",
+        },
+        {
+          en: "EMERGENCY: Team paralyzed after PM asks for a 'quick change' in legacy code.",
+          es: "EMERGENCIA: El equipo queda paralizado cuando el PM pide un 'quick change' en código legacy.",
+        },
+        {
+          en: "LATEST: 'final commit' proven to be a lie for the 47th time.",
+          es: "ÚLTIMO: El 'final commit' se confirma como mentira por cuadragésima séptima vez.",
+        },
+        {
+          en: "DEVELOPING: AI writes flawless code, devs question life choices.",
+          es: "EN DESARROLLO: Una AI escribe código perfecto y los devs cuestionan sus decisiones de vida.",
+        },
+        {
+          en: "WARNING: Recursive function accidentally summons a demon.",
+          es: "ADVERTENCIA: Una función recursiva accidentalmente invoca un demonio.",
+        },
+        {
+          en: "CRITICAL: Dev discovers using tabs instead of spaces, identity crisis begins.",
+          es: "CRÍTICO: Un dev descubre que usaba tabs en vez de spaces, comienza su crisis de identidad.",
+        },
+        {
+          en: "HOT OFF THE PRESSES: 'Hello, World!' crashes, imposter syndrome confirmed.",
+          es: "ÚLTIMO MOMENTO: 'Hello, World!' se cae y se confirma el sindrome de imposter.",
+        },
+        {
+          en: "BREAKING NEWS: Programmer rebases branch successfully, buys lottery ticket.",
+          es: "NOTICIA: Un dev hace rebase de rama exitosamente y compra un billete de lotería.",
+        },
+        {
+          en: "URGENT UPDATE: 'Just one more feature' causes 3-week delay.",
+          es: "URGENTE: 'Solo una feature más' causa 3 semanas de retraso.",
+        },
+        {
+          en: "ALERT: Dev learns favorite API is deprecated, stages silent protest.",
+          es: "ALERTA: Un dev descubre que su API favorita está abandonada e inicia una protesta silenciosa.",
+        },
+        {
+          en: "EXCLUSIVE: 'I'll document it later' revealed as biggest dev lie.",
+          es: "EXCLUSIVA: 'Lo documento después' se revela como la mentira más grande de los devs.",
+        },
+        {
+          en: "JUST IN: Dev spends 4 hours optimizing code that runs once a year.",
+          es: "ÚLTIMO MOMENTO: Un dev pasa 4 horas optimizando código que corre solo una vez al año.",
+        },
+        {
+          en: "REPORT: 'It's not a bug, it's a feature' officially in the dictionary.",
+          es: "REPORTE: 'No es un bug, es un feature' entra oficialmente al diccionario.",
+        },
+        {
+          en: "SHOCKING DISCOVERY: 90% of meetings could be emails, 10% Slack messages.",
+          es: "DESCUBRIMIENTO: El 90% de las reuniones pudieron ser un email, el 10% un mensaje en Slack.",
+        },
+        {
+          en: "BREAKING: Developer deploys to production on Friday, chaos ensues.",
+          es: "ÚLTIMA HORA: Un dev hace deploy a producción en viernes, el caos comienza.",
+        },
+        {
+          en: "URGENT: 'I'll just Google it' is now the most used tech phrase.",
+          es: "URGENTE: 'Lo googleo rápido' es ahora la frase más usada en tech.",
+        },
+        {
+          en: "ALERT: Cat walks on keyboard, accidentally fixes critical bug.",
+          es: "ALERTA: Un gato camina sobre el teclado y arregla un bug crítico accidentalmente.",
+        },
+        {
+          en: "NEWS FLASH: 'I'll do it tomorrow' now recognized as constant.",
+          es: "NOTICIA: 'Lo hago mañana' reconocido como constante universal.",
+        },
+        {
+          en: "JUST IN: Dev tries to explain async/await to non-tech friend, gives up.",
+          es: "ÚLTIMO: Un dev intenta explicar async/await a un amigo no-tech y se rinde.",
+        },
+        {
+          en: "TRENDING: 'Why is this working?' replaces 'Why is this not working?'.",
+          es: "TENDENCIA: '¿Por qué funciona esto?' reemplaza a '¿Por qué no funciona esto?'.",
+        },
+      ]);
+
+      // API functions
+      const fetchPosts = async () => {
+        try {
+          const response = await fetch("/posts.json");
+          const data = await response.json();
+          return data;
+        } catch (error) {
+          console.error("Error fetching posts:", error);
+        }
+      };
+
+      const fetchPostContent = async (id, lang) => {
+        const key = `${id}_${lang}`;
+        if (contentCache[key]) return contentCache[key];
+
+        try {
+          const response = await fetch(`/posts/${id}/content_${lang}.md`);
+          const content = await response.text();
+          contentCache[key] = content;
+          return content;
+        } catch (error) {
+          console.error(`Error fetching content for ${key}:`, error);
+          return `# Error loading content\n\nSorry, couldn't load the content for this post.`;
+        }
+      };
+
+      const getCoverUrl = (id) => `/posts/${id}/thumbnail.jpg`;
+
+      // --- i18n resources ---
+      const resources = {
+        en: {
+          common: {
+            siteName: "sammwy::blog",
+            showAllLangs: "Show all",
+            back: "Back",
+            read: "Read",
+            byline: "crafted with ♡",
+            empty: "Nothing here yet.",
+          },
+        },
+        es: {
+          common: {
+            siteName: "sammwy->blog",
+            showAllLangs: "Mostrar todos",
+            back: "Volver",
+            read: "Leer",
+            byline: "hecho con ♡",
+            empty: "Aún no hay nada.",
+          },
+        },
+      };
+
+      // Simple hash router helpers
+      const navigate = (path) => {
+        window.location.hash = path;
+      };
+      const useHash = () => {
+        const [hash, setHash] = useState(window.location.hash || "#/");
+        useEffect(() => {
+          const onHash = () => setHash(window.location.hash || "#/");
+          window.addEventListener("hashchange", onHash);
+          return () => window.removeEventListener("hashchange", onHash);
+        }, []);
+        return hash;
+      };
+
+      // Data helpers
+      function getVariant(post, lang) {
+        return post.langs[lang] || post.langs["en"];
+      }
+      function formatDate(d) {
+        return new Date(d).toLocaleDateString(undefined, {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        });
+      }
+
+      // UI Primitives
+      const ScrollingHeader = ({ messages, lang }) => {
+        const [currentIndex, setCurrentIndex] = useState(0);
+
+        useEffect(() => {
+          const interval = setInterval(() => {
+            setCurrentIndex((i) => (i + 1) % messages.length);
+          }, 12500);
+          return () => clearInterval(interval);
+        }, [messages.length]);
+
+        const message =
+          messages[currentIndex]?.[lang] || messages[0]?.[lang] || "";
+
+        return (
+          <div className="bg-accent-500/10 border-b border-accent-500/20 py-2 scroll-container">
+            <div className="scroll-text text-sm opacity-80 text-center">
+              {message}
+            </div>
+          </div>
+        );
+      };
+
+      const SocialButtons = () => {
+        const socials = [
+          { name: "Twitter", icon: "/twitter", url: "#" },
+          { name: "GitHub", icon: "/github", url: "#" },
+        ];
+
+        return (
+          <div className="flex items-center gap-2">
+            {socials.map((social) => (
+              <a
+                key={social.name}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="h-8 rounded-lg px-2 flex items-center justify-center text-sm hover:bg-accent-500/10 underline transition-all"
+                title={social.name}
+              >
+                {social.icon}
+              </a>
+            ))}
+          </div>
+        );
+      };
+
+      const Layout = ({ children, onAll, allActive, lang, setLang }) => {
+        return (
+          <div className="min-h-screen">
+            <ScrollingHeader messages={HEADER_MESSAGES} lang={lang} />
+            <header className="sticky top-0 z-50 backdrop-blur bg-bg/70 border-b border-white/10">
+              <div className="max-w-5xl mx-auto px-4 py-4 flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-accent-500 shadow-soft"></span>
+                  <h1 className="font-display text-xl tracking-tight">
+                    {resources[lang]?.common.siteName}
+                  </h1>
+
+                  <button
+                    onClick={() => navigate("#/")}
+                    className="text-sm px-3 py-1 rounded-xl border border-white/15 hover:border-accent-500/60"
+                  >
+                    /latest
+                  </button>
+                  <button
+                    onClick={() => navigate("#/all")}
+                    className="text-sm px-3 py-1 rounded-xl border border-white/15 hover:border-accent-500/60"
+                  >
+                    /all
+                  </button>
+                </div>
+                <div className="ml-auto flex items-center gap-3">
+                  <SocialButtons />
+                  <div className="w-px h-6 bg-white/15"></div>
+                  <select
+                    className="bg-transparent border border-white/15 rounded-xl px-3 py-1 text-sm hover:border-accent-500/60 focus:outline-none focus:ring-2 focus:ring-accent-500/40"
+                    value={lang}
+                    onChange={(e) => setLang(e.target.value)}
+                  >
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                  </select>
+                  <label className="inline-flex items-center gap-2 text-sm px-3 py-1 rounded-xl border border-white/15">
+                    <input
+                      type="checkbox"
+                      className="accent-pink-400"
+                      checked={allActive}
+                      onChange={onAll}
+                    />
+                    <span className="opacity-80">
+                      {resources[lang]?.common.showAllLangs}
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </header>
+            <main className="max-w-5xl mx-auto px-4">{children}</main>
+            <footer className="max-w-5xl mx-auto px-4 py-12 text-xs opacity-60">
+              <div className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-accent-500"></span>
+                {resources[lang]?.common.byline}
+              </div>
+            </footer>
+          </div>
+        );
+      };
+
+      const Card = ({ post, lang }) => {
+        const variant = getVariant(post, lang);
+        const coverUrl = getCoverUrl(post.id);
+
+        return (
+          <article className="group rounded-2xl overflow-hidden border border-white/10 bg-white/5 hover:bg-white/7 transition-all hover:shadow-soft">
+            <div className="aspect-[16/9] bg-white/5 cute-outline overflow-hidden">
+              <img
+                src={coverUrl}
+                alt="cover"
+                className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                onError={(e) => {
+                  // Fallback to a placeholder if cover image fails to load
+                  e.target.src =
+                    "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIyNSIgdmlld0JveD0iMCAwIDQwMCAyMjUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMjI1IiBmaWxsPSIjMEIwQjBDIi8+CjxyZWN0IHg9IjE3NSIgeT0iOTciIHdpZHRoPSI1MCIgaGVpZ2h0PSIzMSIgZmlsbD0iI0ZGN0NBQyIvPgo8L3N2Zz4K";
+                }}
+              />
+            </div>
+            <div className="p-4 flex flex-col gap-2">
+              <div className="text-[11px] uppercase tracking-wider opacity-60">
+                {formatDate(post.date)} · {lang.toUpperCase()}
+              </div>
+              <h3 className="font-display text-lg">{variant.title}</h3>
+              <p className="text-sm opacity-80 line-clamp-2">
+                {variant.description}
+              </p>
+              <div className="pt-2">
+                <a
+                  href={`#/post/${post.id}`}
+                  className="text-sm underline decoration-dotted underline-offset-4 hover:text-accent-400"
+                >
+                  {resources[lang]?.common.read} →
+                </a>
+              </div>
+            </div>
+          </article>
+        );
+      };
+
+      const LatestView = ({ posts, lang }) => {
+        const latest = posts.slice(0, 3);
+        return (
+          <section className="py-6">
+            <h2 className="font-display text-xl mb-4">/latest</h2>
+            {latest.length === 0 && (
+              <div className="opacity-60 text-sm">
+                {resources[lang]?.common.empty}
+              </div>
+            )}
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {latest.map((p) => (
+                <Card key={p.id + lang} post={p} lang={lang} />
+              ))}
+            </div>
+          </section>
+        );
+      };
+
+      const AllPostsView = ({ posts, lang }) => {
+        return (
+          <section className="py-6">
+            <h2 className="font-display text-xl mb-4">/all</h2>
+            {posts.length === 0 && (
+              <div className="opacity-60 text-sm">
+                {resources[lang]?.common.empty}
+              </div>
+            )}
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {posts.map((p) => (
+                <Card key={p.id + lang + Math.random()} post={p} lang={lang} />
+              ))}
+            </div>
+          </section>
+        );
+      };
+
+      const PostView = ({ posts, id, lang }) => {
+        const [content, setContent] = useState("");
+        const [loadingContent, setLoadingContent] = useState(true);
+        const post = posts.find((p) => p.id === id);
+
+        useEffect(() => {
+          if (post) {
+            fetchPostContent(id, lang).then((content) => {
+              setContent(content);
+              setLoadingContent(false);
+            });
+          }
+        }, [id, post, lang]);
+
+        if (!post)
+          return <div className="py-12 opacity-60">404 - Post not found</div>;
+
+        const variant = getVariant(post, lang);
+        const html = useMemo(() => {
+          if (!content) return "";
+
+          // Configure marked with syntax highlighting
+          marked.setOptions({
+            highlight: function (code, lang) {
+              if (Prism.languages[lang]) {
+                return Prism.highlight(code, Prism.languages[lang], lang);
+              }
+              return code;
+            },
+            breaks: true,
+            gfm: true,
+          });
+
+          return marked.parse(content);
+        }, [content]);
+        const coverUrl = getCoverUrl(post.id);
+
+        return (
+          <article className="py-6">
+            <button
+              onClick={() => window.history.back()}
+              className="text-sm mb-4 underline decoration-dotted underline-offset-4 hover:text-accent-400"
+            >
+              ← {resources[lang]?.common.back}
+            </button>
+            <div className="rounded-2xl overflow-hidden border border-white/10 bg-white/5 cute-outline">
+              <img
+                src={coverUrl}
+                alt="cover"
+                className="w-full max-h-[50vh] object-cover"
+                onError={(e) => {
+                  e.target.src =
+                    "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIyNSIgdmlld0JveD0iMCAwIDQwMCAyMjUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMjI1IiBmaWxsPSIjMEIwQjBDIi8+CjxyZWN0IHg9IjE3NSIgeT0iOTciIHdpZHRoPSI1MCIgaGVpZ2h0PSIzMSIgZmlsbD0iI0ZGN0NBQyIvPgo8L3N2Zz4K";
+                }}
+              />
+            </div>
+            <h1 className="font-display text-2xl mt-6 mb-2">{variant.title}</h1>
+            <div className="text-xs uppercase tracking-wider opacity-60">
+              {formatDate(post.date)} · {lang.toUpperCase()}
+            </div>
+            {loadingContent ? (
+              <div className="mt-6 opacity-60 text-sm">Loading content...</div>
+            ) : (
+              <div
+                className="prose prose-invert max-w-none mt-8"
+                dangerouslySetInnerHTML={{ __html: html }}
+              />
+            )}
+          </article>
+        );
+      };
+
+      // --- App Root ---
+      function App() {
+        const [lang, setLang] = useState(localStorage.getItem("lang") || "en");
+        const [showAll, setShowAll] = useState(false);
+        const hash = useHash();
+
+        // --- Data fetching and state management ---
+        const [posts, setPosts] = useState([]);
+        const [loading, setLoading] = useState(true);
+        const [contentCache, setContentCache] = useState({});
+
+        useEffect(() => {
+          localStorage.setItem("lang", lang);
+        }, [lang]);
+
+        // Load posts on mount
+        useEffect(() => {
+          fetchPosts().then((data) => {
+            setPosts(data);
+            setLoading(false);
+          });
+        }, []);
+
+        // Filter posts by language unless showAll is true
+        const postsSorted = useMemo(() => {
+          const sorted = [...posts].sort(
+            (a, b) => new Date(b.date) - new Date(a.date)
+          );
+          if (showAll) return sorted;
+          return sorted.filter((p) => p.langs[lang]);
+        }, [posts, lang, showAll]);
+
+        // Show loading state
+        if (loading) {
+          return (
+            <Layout
+              lang={lang}
+              setLang={setLang}
+              allActive={showAll}
+              onAll={() => setShowAll((v) => !v)}
+            >
+              <div className="py-12 text-center opacity-60">
+                <div className="inline-flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-accent-500 animate-pulse"></span>
+                  Loading posts...
+                </div>
+              </div>
+            </Layout>
+          );
+        }
+
+        // Routing
+        let view = null;
+        if (hash.startsWith("#/post/")) {
+          const id = hash.replace("#/post/", "").trim();
+          view = <PostView id={id} lang={lang} posts={posts} />;
+        } else if (hash === "#/all") {
+          view = <AllPostsView posts={postsSorted} lang={lang} />;
+        } else {
+          view = <LatestView posts={postsSorted} lang={lang} />;
+        }
+
+        return (
+          <Layout
+            lang={lang}
+            setLang={setLang}
+            allActive={showAll}
+            onAll={() => setShowAll((v) => !v)}
+          >
+            {view}
+          </Layout>
+        );
+      }
+
+      const Root = () => <App />;
+
+      ReactDOM.createRoot(document.getElementById("root")).render(<Root />);
+
+      // --- Cursor script ---
+      (function () {
+        const ring = document.getElementById("cursor-ring");
+        const dot = document.getElementById("cursor-dot");
+        let hideTimer;
+        const move = (e) => {
+          const { clientX: x, clientY: y } = e;
+          ring.style.left = x + "px";
+          ring.style.top = y + "px";
+          dot.style.left = x + "px";
+          dot.style.top = y + "px";
+          ring.classList.remove("cursor-hide");
+          dot.classList.remove("cursor-hide");
+          clearTimeout(hideTimer);
+          hideTimer = setTimeout(() => {
+            ring.classList.add("cursor-hide");
+            dot.classList.add("cursor-hide");
+          }, 2000);
+        };
+        window.addEventListener("mousemove", move, { passive: true });
+        window.addEventListener("mousedown", () => {
+          ring.style.width = "34px";
+          ring.style.height = "34px";
+        });
+        window.addEventListener("mouseup", () => {
+          ring.style.width = "22px";
+          ring.style.height = "22px";
+        });
+        window.addEventListener("mouseleave", () => {
+          ring.classList.add("cursor-hide");
+          dot.classList.add("cursor-hide");
+        });
+      })();
+    </script>
+  </body>
+</html>

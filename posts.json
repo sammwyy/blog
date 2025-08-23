@@ -1,0 +1,101 @@
+[
+  {
+    "id": "802.11-networks",
+    "date": "2025-01-03",
+    "category": "networking",
+    "langs": {
+      "en": {
+        "title": "How Wi-Fi/802.11 Networks Work",
+        "description": "Breaking down in detail how 802.11 networks work."
+      }
+    }
+  },
+  {
+    "id": "bios-vs-uefi",
+    "date": "2024-07-18",
+    "category": "hardware",
+    "langs": {
+      "en": {
+        "title": "Differences between BIOS/UEFI",
+        "description": "Behind your OS, kernel and motherboard, there is MORE SOFTWARE!"
+      }
+    }
+  },
+  {
+    "id": "build-my-own-cpu",
+    "date": "2024-08-12",
+    "category": "hardware",
+    "langs": {
+      "en": {
+        "title": "Build my own CPU",
+        "description": "The best way to know how something works is to create it."
+      }
+    }
+  },
+  {
+    "id": "hide-vm-from-detection",
+    "date": "2024-10-29",
+    "category": "re",
+    "langs": {
+      "en": {
+        "title": "Hide VM from Detection",
+        "description": "How to hide the virtual machine from detection."
+      }
+    }
+  },
+  {
+    "id": "how-to-pentest",
+    "date": "2024-07-11",
+    "category": "hacking",
+    "langs": {
+      "en": {
+        "title": "How to Pentest",
+        "description": "A Comprehensive Guide to Penetration Testing Commands."
+      }
+    }
+  },
+  {
+    "id": "memory-hacking-rust",
+    "date": "2024-01-01",
+    "category": "rust",
+    "langs": {
+      "en": {
+        "title": "Proc Memory hacking",
+        "description": "Reading and writing to the memory of an arbitrary process with Rust."
+      }
+    }
+  },
+  {
+    "id": "the-minecraft-protocol",
+    "date": "2024-06-29",
+    "category": "programming",
+    "langs": {
+      "en": {
+        "title": "The Minecraft protocol",
+        "description": "A deep dive into the Minecraft protocol and networking stack."
+      }
+    }
+  },
+  {
+    "id": "understanding-asm",
+    "date": "2024-06-30",
+    "category": "assembly",
+    "langs": {
+      "en": {
+        "title": "Understanding ASM",
+        "description": "Beyond the basics of Assembly Language"
+      }
+    }
+  },
+  {
+    "id": "understanding-bootloaders",
+    "date": "2024-07-18",
+    "category": "assembly",
+    "langs": {
+      "en": {
+        "title": "Understanding Bootloaders",
+        "description": "Beyond the booting up of a computer system"
+      }
+    }
+  }
+]
